@@ -53,7 +53,7 @@ function Admin() {
       setFormData({ name: "", price: "", image: "", description: "", category: "Fast Food", isVeg: true });
       fetchData();
     } catch (err) {
-      alert("Error: Only Admins can add items.");
+      alert(err.response?.data?.message || "Error: Only Admins can add items.");
     }
   };
 
@@ -65,7 +65,7 @@ function Admin() {
       });
       fetchData();
     } catch (err) {
-      alert("Delete Failed: You don't have permission.");
+      alert(err.response?.data?.message || "Delete Failed: You don't have permission.");
     }
   };
 
@@ -77,7 +77,7 @@ function Admin() {
       );
       fetchData();
     } catch (err) {
-      alert("Update Failed: You don't have permission.");
+      alert(err.response?.data?.message || "Update Failed: You don't have permission.");
     }
   };
 
