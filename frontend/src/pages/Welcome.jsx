@@ -5,7 +5,7 @@ import axios from "axios";
 
 function Welcome() {
   const [tableInput, setTableInput] = useState("");
-  const [totalTables, setTotalTables] = useState(0);
+  const [totalTables, setTotalTables] = useState(20); // Default to 20 instead of 0
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
