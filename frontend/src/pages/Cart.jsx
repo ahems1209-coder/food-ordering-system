@@ -19,7 +19,8 @@ function Cart({ cart, setCart, addToCart, decrementQty, removeFromCart }) {
       orderNumber: Math.floor(1000 + Math.random() * 9000), // Random 4-digit Order ID
       items: cart,
       totalAmount: total,
-    , restaurantId: localStorage.getItem("restaurantId") };
+      restaurantId: localStorage.getItem("restaurantId"),
+    };
 
     try {
       // Play a quick sound to unlock the audio engine for status updates
