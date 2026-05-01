@@ -1,7 +1,7 @@
+import API_URL from "../api";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import API_URL from "../api";
 
 function Welcome() {
   const [tableInput, setTableInput] = useState("");
@@ -15,7 +15,7 @@ function Welcome() {
         const res = await axios.get(`${API_URL}/api/config`);
         setTotalTables(res.data.totalTables || 20);
       } catch (err) {
-        console.error(`Failed to load restaurant config", err);
+        console.error("Failed to load restaurant config", err);
         setTotalTables(20); // Fallback
       } finally {
         setLoading(false);

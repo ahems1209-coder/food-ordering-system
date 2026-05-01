@@ -1,3 +1,4 @@
+import API_URL from "../api";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -28,7 +29,7 @@ function OrderTracker() {
 
     const pollStatus = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/orders/${activeOrderId}`);
+        const res = await axios.get(`${API_URL}/api/orders/${activeOrderId}`);
         setOrderStatus(res.data.status);
         
         if (res.data.status === "Served") {

@@ -1,7 +1,8 @@
+import API_URL from "../api";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { QRCodeCanvas } from "qrcode.react";
-import API_URL from "../api";
+
 
 function Admin() {
   const [foods, setFoods] = useState([]);
@@ -59,7 +60,7 @@ function Admin() {
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this item?")) return;
     try {
-      await axios.delete(`http://localhost:5000/api/foods/${id}`, {
+      await axios.delete(`${API_URL}/api/foods/${id}`, {
         headers: { Authorization: `Bearer ${token}` } // 👈 Sending the Key
       });
       fetchData();
@@ -70,7 +71,7 @@ function Admin() {
 
   const handleToggleAvailable = async (food) => {
     try {
-      await axios.patch(`http://localhost:5000/api/foods/${food._id}`, 
+      await axios.patch(`${API_URL}/api/foods/${food._id}`, 
         { isAvailable: food.isAvailable === false ? true : false }, 
         { headers: { Authorization: `Bearer ${token}` } }
       );

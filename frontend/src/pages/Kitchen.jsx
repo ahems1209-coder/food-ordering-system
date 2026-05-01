@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
 import API_URL from "../api";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+
 import axios from "axios";
 
 function Kitchen() {
@@ -23,7 +23,7 @@ function Kitchen() {
 
   const updateStatus = async (id, status) => {
     try {
-      await axios.patch(`http://localhost:5000/api/orders/${id}`, { status }, {
+      await axios.patch(`${API_URL}/api/orders/${id}`, { status }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchOrders();

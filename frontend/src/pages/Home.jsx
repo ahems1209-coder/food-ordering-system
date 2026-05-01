@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
 import API_URL from "../api";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+
 import axios from "axios";
 import { Link } from "react-router-dom";
 import FoodCard from "../components/FoodCard";
