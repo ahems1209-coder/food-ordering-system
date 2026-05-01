@@ -80,8 +80,9 @@ function App() {
       {/*  STAFF NAVIGATION (Only shown to logged-in staff) */}
       {user && (
         <nav className="bg-black text-white px-4 md:px-8 py-4 md:py-5 flex justify-between items-center sticky top-0 z-50 shadow-md">
-          <Link to="/dashboard" className="text-xl md:text-2xl font-black italic uppercase">
-            Food<span className="text-orange-500">Dash</span> <span className="text-[10px] bg-white/20 px-2 py-1 rounded ml-2 not-italic">STAFF</span>
+          <Link to="/dashboard" className="flex items-center gap-2 text-xl md:text-2xl font-black italic uppercase">
+            <img src="/logo.png" alt="Logo" className="h-8 w-8 rounded-lg" />
+            <span>Food<span className="text-orange-500">Dash</span></span> <span className="text-[10px] bg-white/20 px-2 py-1 rounded ml-2 not-italic">STAFF</span>
           </Link>
           
           <div className="hidden md:flex items-center space-x-8 text-xs font-bold uppercase tracking-widest">
@@ -97,8 +98,9 @@ function App() {
       {/* CUSTOMER NAVBAR (Minimalist, only shown to customers) */}
       {!user && (
         <nav className="bg-white border-b border-gray-100 px-4 md:px-8 py-4 md:py-5 flex justify-between items-center sticky top-0 z-50">
-          <Link to="/" className="text-xl md:text-2xl font-black italic uppercase text-gray-900">
-            Food<span className="text-orange-500">Dash</span>
+          <Link to="/" className="flex items-center gap-2 text-xl md:text-2xl font-black italic uppercase text-gray-900">
+            <img src="/logo.png" alt="Logo" className="h-8 w-8 rounded-lg" />
+            <span>Food<span className="text-orange-500">Dash</span></span>
           </Link>
           
           <div className="flex items-center gap-4 md:gap-6">
