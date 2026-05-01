@@ -106,10 +106,10 @@ function App() {
           </Link>
           
           <div className="flex items-center gap-4 md:gap-6">
-            {tableNumber && (
-              <div className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-xl border border-gray-100">
-                 <div className="h-1.5 w-1.5 bg-green-500 rounded-full animate-pulse"></div>
-                 <span className="text-[10px] font-black uppercase text-gray-400">Table {tableNumber}</span>
+            {tableNumber && localStorage.getItem("restaurantId") && (
+              <div className="flex items-center gap-2 bg-green-50 px-3 py-1.5 rounded-full border border-green-100 shadow-sm">
+                <div className="h-2 w-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span className="text-[10px] font-black uppercase tracking-widest text-green-700">Table {tableNumber}</span>
               </div>
             )}
             
