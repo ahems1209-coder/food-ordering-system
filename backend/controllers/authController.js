@@ -13,14 +13,11 @@ export const registerUser = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Make the first registered user an admin automatically
-    const isFirstAccount = (await User.countDocuments({})) === 0;
-
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
-      isAdmin: isFirstAccount,
+      isAdmin: true, // Everyone who registers is an owner of their own restaurant
     });
 
     res.status(201).json({ message: "User registered successfully" });
