@@ -28,12 +28,14 @@ function App() {
       localStorage.setItem("tableNumber", table);
       setTableNumber(table);
     }
-    if (restaurant) {
+    if (restaurant && restaurant !== "null" && restaurant !== "undefined") {
       localStorage.setItem("restaurantId", restaurant);
+      // Force a page refresh to clear any old state and fetch new data
+      window.location.href = window.location.pathname;
     }
 
-    if (table || restaurant) {
-      // Clean up URL without reloading
+    if (table && !restaurant) {
+      // Clean up URL without reloading if only table is present
       window.history.replaceState({}, document.title, window.location.pathname);
     }
   }, []);

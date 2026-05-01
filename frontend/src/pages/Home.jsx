@@ -27,7 +27,13 @@ function Home({ addToCart, cart, decrementQty }) {
   useEffect(() => {
     const fetchFoods = async () => {
       try {
-        const res = await axios.get(`${API_URL}/api/foods?restaurantId=${localStorage.getItem("restaurantId")}`);
+        const restaurantId = localStorage.getItem("restaurantId");
+        if (!restaurantId || restaurantId === "null" || restaurantId === "undefined") {
+          setFoods([]);
+          setLoading(false);
+          return;
+        }
+        const res = await axios.get(`${API_URL}/api/foods?restaurantId=${restaurantId}`);
         setFoods(res.data);
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -101,8 +107,17 @@ function Home({ addToCart, cart, decrementQty }) {
           </div>
         )}
 
+        {/* NO RESTAURANT SELECTED STATE */}
+        {!loading && !localStorage.getItem("restaurantId") && (
+          <div className="text-center py-32 bg-white rounded-[3rem] shadow-sm border-2 border-dashed border-gray-100">
+            <div className="text-6xl mb-4">🤳</div>
+            <h3 className="text-2xl font-bold text-gray-800">Please Scan Table QR Code</h3>
+            <p className="text-gray-400 mt-2 text-sm max-w-xs mx-auto">Scan the QR code on your table to see the menu and start ordering.</p>
+          </div>
+        )}
+
         {/* EMPTY STATE */}
-        {!loading && filteredFoods.length === 0 && (
+        {!loading && localStorage.getItem("restaurantId") && filteredFoods.length === 0 && (
           <div className="text-center py-32 bg-white rounded-[3rem] shadow-sm border-2 border-dashed border-gray-100">
             <div className="text-6xl mb-4">🍕</div>
             <h3 className="text-2xl font-bold text-gray-800">No Food Found</h3>
