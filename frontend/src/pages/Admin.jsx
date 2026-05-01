@@ -16,9 +16,11 @@ function Admin() {
   const fetchData = async () => {
     setLoading(true);
     try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const restaurantId = user?.id || user?._id;
       const [foodsRes, configRes] = await Promise.all([
-        axios.get(`${API_URL}/api/foods`),
-        axios.get(`${API_URL}/api/config`)
+        axios.get(`${API_URL}/api/foods?restaurantId=${restaurantId}`),
+        axios.get(`${API_URL}/api/config?restaurantId=${restaurantId}`)
       ]);
       setFoods(foodsRes.data);
       if (configRes.data) setTotalTables(configRes.data.totalTables);
