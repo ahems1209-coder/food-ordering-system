@@ -18,13 +18,21 @@ function App() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")) || null);
   const [tableNumber, setTableNumber] = useState(localStorage.getItem("tableNumber") || "");
 
-  // Detect ?table= URL param for QR ordering
+  // Detect ?table= and ?restaurant= URL params for QR ordering
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const table = params.get("table");
+    const restaurant = params.get("restaurant");
+    
     if (table) {
       localStorage.setItem("tableNumber", table);
       setTableNumber(table);
+    }
+    if (restaurant) {
+      localStorage.setItem("restaurantId", restaurant);
+    }
+
+    if (table || restaurant) {
       // Clean up URL without reloading
       window.history.replaceState({}, document.title, window.location.pathname);
     }

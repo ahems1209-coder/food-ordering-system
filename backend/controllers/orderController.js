@@ -2,8 +2,9 @@ import Order from "../models/Order.js"; // 👈 Ensure this .js is there!
 
 export const placeOrder = async (req, res) => {
   try {
-    const { tableNumber, orderNumber, items, totalAmount } = req.body;
-    const newOrder = new Order({ tableNumber, orderNumber, items, totalAmount });
+    const { tableNumber, orderNumber, items, totalAmount, restaurantId } = req.body;
+    if (!restaurantId) return res.status(400).json({ message: "Restaurant ID required" });
+    const newOrder = new Order({ tableNumber, orderNumber, items, totalAmount, restaurantId });
     await newOrder.save();
     res.status(201).json(newOrder);
   } catch (error) {
@@ -13,7 +14,7 @@ export const placeOrder = async (req, res) => {
 
 export const getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find().sort({ createdAt: -1 });
+    const orders = await Order.find({ restaurantId: req.user.id }).sort({ createdAt: -1 });
     res.status(200).json(orders);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -33,7 +34,7 @@ export const updateOrderStatus = async (req, res) => {
 
 export const getOrderStats = async (req, res) => {
   try {
-    const orders = await Order.find();
+    const orders = await Order.find({ restaurantId: req.user.id });
     
     let totalSales = 0;
     let totalOrders = orders.length;

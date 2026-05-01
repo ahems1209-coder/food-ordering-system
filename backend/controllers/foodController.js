@@ -4,7 +4,9 @@ import Food from "../models/Food.js"; // 👈 CRITICAL: Must have .js extension
 // @route   GET /api/foods
 export const getFoods = async (req, res) => {
   try {
-    const foods = await Food.find();
+    const ownerId = req.query.restaurantId || (req.user ? req.user.id : null);
+    if (!ownerId) return res.status(400).json({ message: "Restaurant ID required" });
+    const foods = await Food.find({ owner: ownerId });
     res.json(foods);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -24,6 +26,7 @@ export const addFood = async (req, res) => {
       description,
       category,
       isVeg,
+      owner: req.user.id,
     });
 
     const createdFood = await food.save();

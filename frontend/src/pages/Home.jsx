@@ -27,7 +27,7 @@ function Home({ addToCart, cart, decrementQty }) {
   useEffect(() => {
     const fetchFoods = async () => {
       try {
-        const res = await axios.get(`${API_URL}/api/foods`);
+        const res = await axios.get(`${API_URL}/api/foods?restaurantId=${localStorage.getItem("restaurantId")}`);
         setFoods(res.data);
       } catch (err) {
         console.error("Error fetching data:", err);

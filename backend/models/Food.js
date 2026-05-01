@@ -8,6 +8,7 @@ const foodSchema = new mongoose.Schema({
   isVeg: { type: Boolean, default: true },
   isAvailable: { type: Boolean, default: true },
   description: { type: String, required: true },
+  owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
 }, { timestamps: true });
 
 const Food = mongoose.model("Food", foodSchema);

@@ -16,6 +16,7 @@ const orderSchema = new mongoose.Schema({
     enum: ['Pending', 'Preparing', 'Ready', 'Served', 'Paid'], 
     default: "Pending" 
   },
+  restaurantId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
 }, { timestamps: true });
 
 const Order = mongoose.model("Order", orderSchema);

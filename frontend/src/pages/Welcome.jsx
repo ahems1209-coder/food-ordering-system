@@ -12,7 +12,9 @@ function Welcome() {
   useEffect(() => {
     const fetchConfig = async () => {
       try {
-        const res = await axios.get(`${API_URL}/api/config`);
+        const restaurantId = localStorage.getItem("restaurantId");
+        if (!restaurantId) return; // Wait for QR code scan
+        const res = await axios.get(`${API_URL}/api/config?restaurantId=${restaurantId}`);
         setTotalTables(res.data.totalTables || 20);
       } catch (err) {
         console.error("Failed to load restaurant config", err);
