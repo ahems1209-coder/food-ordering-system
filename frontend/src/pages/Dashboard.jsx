@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import API_URL from "../api";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -7,7 +8,7 @@ function Dashboard() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    axios.get(`${API_URL}/api/orders/stats", {
+    axios.get(`${API_URL}/api/orders/stats`, {
       headers: { Authorization: `Bearer ${token}` }
     }).then(res => setStats(res.data))
       .catch(err => console.error("Error fetching stats", err));

@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import API_URL from "../api";
 import { useState } from "react";
 import axios from "axios";
@@ -14,7 +15,7 @@ function Register() {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${API_URL}/api/auth/register", formData);
+      await axios.post(`${API_URL}/api/auth/register`, formData);
       alert("Registration Successful! Please Login.");
       navigate("/login");
     } catch (err) {

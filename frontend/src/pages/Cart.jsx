@@ -26,7 +26,7 @@ function Cart({ cart, setCart, addToCart, decrementQty, removeFromCart }) {
       unlockAudio.volume = 0.1;
       unlockAudio.play().catch(() => {});
 
-      const res = await axios.post(`${API_URL}/api/orders", orderData);
+      const res = await axios.post(`${API_URL}/api/orders`, orderData);
       
       // Store the order ID for live tracking
       localStorage.setItem("activeOrderId", res.data._id);

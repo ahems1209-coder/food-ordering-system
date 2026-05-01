@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import API_URL from "../api";
 import { useState } from "react";
 import axios from "axios";
@@ -11,7 +12,7 @@ function Login({ setUser }) {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${API_URL}/api/auth/login", { email, password });
+      const res = await axios.post(`${API_URL}/api/auth/login`, { email, password });
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
       localStorage.removeItem("tableNumber"); // Clear table number on admin login
