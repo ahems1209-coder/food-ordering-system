@@ -1,3 +1,4 @@
+import API_URL from "../api";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -8,7 +9,7 @@ function Kitchen() {
 
   const fetchOrders = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/orders/all", {
+      const res = await axios.get(`${API_URL}/api/orders/all", {
         headers: { Authorization: `Bearer ${token}` }
       });
       // Kitchen only sees Pending and Preparing

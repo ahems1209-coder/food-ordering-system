@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
 import axios from "axios";
 import { QRCodeCanvas } from "qrcode.react";
+import API_URL from "../api";
 
 function Admin() {
   const [foods, setFoods] = useState([]);
@@ -15,8 +15,8 @@ function Admin() {
     setLoading(true);
     try {
       const [foodsRes, configRes] = await Promise.all([
-        axios.get("http://localhost:5000/api/foods"),
-        axios.get("http://localhost:5000/api/config")
+        axios.get(`${API_URL}/api/foods"),
+        axios.get(`${API_URL}/api/config")
       ]);
       setFoods(foodsRes.data);
       if (configRes.data) setTotalTables(configRes.data.totalTables);
@@ -32,7 +32,7 @@ function Admin() {
   const handleUpdateConfig = async (e) => {
     e.preventDefault();
     try {
-      await axios.patch("http://localhost:5000/api/config", { totalTables }, {
+      await axios.patch(`${API_URL}/api/config", { totalTables }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       alert("Restaurant Settings Updated!");
@@ -44,7 +44,7 @@ function Admin() {
   const handleAdd = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/foods", formData, {
+      await axios.post(`${API_URL}/api/foods", formData, {
         headers: { Authorization: `Bearer ${token}` } // 👈 Sending the Key
       });
       alert("Dish Added Successfully!");

@@ -1,3 +1,4 @@
+import API_URL from "../api";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
@@ -25,7 +26,7 @@ function Cart({ cart, setCart, addToCart, decrementQty, removeFromCart }) {
       unlockAudio.volume = 0.1;
       unlockAudio.play().catch(() => {});
 
-      const res = await axios.post("http://localhost:5000/api/orders", orderData);
+      const res = await axios.post(`${API_URL}/api/orders", orderData);
       
       // Store the order ID for live tracking
       localStorage.setItem("activeOrderId", res.data._id);
