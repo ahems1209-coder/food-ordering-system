@@ -169,7 +169,7 @@ function Admin() {
           {Array.from({ length: totalTables }, (_, i) => i + 1).map(num => (
             <div key={num} className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-200 rounded-3xl bg-gray-50 hover:bg-white hover:border-orange-500 transition-all group">
               <div className="bg-white p-2 rounded-2xl shadow-sm group-hover:shadow-md transition-all">
-                <QRCodeCanvas id={`qr-${num}`} value={`${baseUrl}/?table=${num}&restaurant=${JSON.parse(localStorage.getItem("user"))._id}`} size={120} />
+                <QRCodeCanvas id={`qr-${num}`} value={`${baseUrl}/?table=${num}&restaurant=${JSON.parse(localStorage.getItem("user")).id || JSON.parse(localStorage.getItem("user"))._id}`} size={120} />
               </div>
               <p className="mt-4 font-black text-xl text-black">Table {num}</p>
               <button 
