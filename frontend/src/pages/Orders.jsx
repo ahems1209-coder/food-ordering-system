@@ -5,6 +5,7 @@ import axios from "axios";
 function Orders() {
   const [orders, setOrders] = useState([]);
   const [isAudioUnlocked, setIsAudioUnlocked] = useState(false);
+  const isInitialLoad = useRef(true);
   const token = localStorage.getItem("token");
   const audioRef = useRef(null);
 
@@ -17,11 +18,20 @@ function Orders() {
       const activeOrders = res.data.filter(order => order.status !== "Paid" && order.status !== "Pending" && order.status !== "Preparing");
       
       setOrders(prevOrders => {
-        // If new "Ready" orders are added, play chime
+        // Find new orders that are now "Ready" but weren't in the previous list
         const newReadyOrders = activeOrders.filter(ao => ao.status === "Ready" && !prevOrders.some(po => po._id === ao._id));
-        if (newReadyOrders.length > 0 && prevOrders.length !== 0) {
+        
+        // Play sound if:
+        // 1. There are new ready orders
+        // 2. It's NOT the first load of the page
+        if (newReadyOrders.length > 0 && !isInitialLoad.current) {
           playNotification();
         }
+
+        if (isInitialLoad.current) {
+          isInitialLoad.current = false;
+        }
+
         return activeOrders;
       });
     } catch (err) {
@@ -64,13 +74,16 @@ function Orders() {
 
   return (
     <div className="p-4 md:p-10 bg-gray-100 min-h-screen pb-24 md:pb-10" onClick={!isAudioUnlocked ? unlockAudio : undefined}>
-      <audio ref={audioRef} src="https://www.soundjay.com/buttons/sounds/button-20.mp3" preload="auto" />
+      <audio ref={audioRef} src="https://raw.githubusercontent.com/sh4hids/Sound-Effects/master/iPhone-Notification.mp3" preload="auto" />
 
       <div className="flex justify-between items-center mb-6 md:mb-10">
         <div>
           <h2 className="text-2xl md:text-4xl font-black italic uppercase tracking-tighter text-gray-900 underline decoration-orange-500 decoration-8 underline-offset-8">Front of House</h2>
           {!isAudioUnlocked && (
-            <p className="text-[10px] text-orange-600 font-bold animate-pulse mt-1 italic uppercase tracking-widest">Tap anywhere to enable sound</p>
+            <p className="text-[10px] text-orange-600 font-bold animate-pulse mt-1 italic uppercase tracking-widest">⚠️ Please tap anywhere on the screen to enable sound</p>
+          )}
+          {isAudioUnlocked && (
+            <p className="text-[10px] text-green-600 font-bold mt-1 italic uppercase tracking-widest">✅ Sound Active</p>
           )}
         </div>
         <div className="bg-green-500 h-4 w-4 rounded-full animate-ping"></div>
@@ -84,7 +97,7 @@ function Orders() {
           </div>
         ) : (
           orders.map(order => (
-            <div key={order._id} className="bg-white p-6 md:p-8 rounded-[2.5rem] shadow-lg border-t-8 border-black">
+            <div key={order._id} className="bg-white p-6 md:p-8 rounded-[2.5rem] shadow-lg border-t-8 border-black transition-all hover:scale-[1.02]">
               <div className="flex justify-between items-start mb-6">
                 <div>
                   <h3 className="text-3xl md:text-4xl font-black text-orange-500">TABLE {order.tableNumber}</h3>
