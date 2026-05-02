@@ -23,9 +23,12 @@ function Kitchen() {
         if (newOrders.length > 0 && !isInitialLoad.current) {
           if (audioRef.current) {
             audioRef.current.currentTime = 0;
-            audioRef.current.play().catch(() => {
-              console.log("Autoplay blocked by browser. Interaction required.");
-            });
+            const playPromise = audioRef.current.play();
+            if (playPromise !== undefined) {
+              playPromise.catch(error => {
+                console.log("Playback failed. User interaction needed to unlock audio.");
+              });
+            }
           }
         }
         
@@ -51,16 +54,31 @@ function Kitchen() {
     }
   };
 
+  // Auto-unlock audio on first user click anywhere
   useEffect(() => {
+    const unlock = () => {
+      if (audioRef.current) {
+        audioRef.current.play().then(() => {
+          audioRef.current.pause();
+          window.removeEventListener('click', unlock);
+          console.log("Audio unlocked");
+        }).catch(() => {});
+      }
+    };
+    window.addEventListener('click', unlock);
+    
     fetchOrders();
     const interval = setInterval(fetchOrders, 3000); 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('click', unlock);
+    };
   }, []);
 
   return (
     <div className="p-4 md:p-10 bg-gray-900 min-h-screen text-white pb-24 md:pb-10">
-      {/* Hidden Audio Element */}
-      <audio ref={audioRef} src="https://raw.githubusercontent.com/sh4hids/Sound-Effects/master/iPhone-Notification.mp3" preload="auto" />
+      {/* Hidden Audio Element - Using a reliable soft ding */}
+      <audio ref={audioRef} src="https://www.soundjay.com/buttons/sounds/button-20.mp3" preload="auto" />
 
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-10 gap-4">
         <h1 className="text-3xl md:text-4xl font-black italic uppercase tracking-tighter">Kitchen <span className="text-orange-500">Live</span></h1>

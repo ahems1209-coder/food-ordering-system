@@ -24,9 +24,10 @@ function Orders() {
         if (newReadyOrders.length > 0 && !isInitialLoad.current) {
           if (audioRef.current) {
             audioRef.current.currentTime = 0;
-            audioRef.current.play().catch(() => {
-              console.log("Autoplay blocked by browser. Interaction required.");
-            });
+            const playPromise = audioRef.current.play();
+            if (playPromise !== undefined) {
+              playPromise.catch(() => {});
+            }
           }
         }
 
@@ -52,15 +53,29 @@ function Orders() {
     }
   };
 
+  // Auto-unlock audio on first user click anywhere
   useEffect(() => {
+    const unlock = () => {
+      if (audioRef.current) {
+        audioRef.current.play().then(() => {
+          audioRef.current.pause();
+          window.removeEventListener('click', unlock);
+        }).catch(() => {});
+      }
+    };
+    window.addEventListener('click', unlock);
+
     fetchOrders();
     const interval = setInterval(fetchOrders, 5000); 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('click', unlock);
+    };
   }, []);
 
   return (
     <div className="p-4 md:p-10 bg-gray-100 min-h-screen pb-24 md:pb-10">
-      <audio ref={audioRef} src="https://raw.githubusercontent.com/sh4hids/Sound-Effects/master/iPhone-Notification.mp3" preload="auto" />
+      <audio ref={audioRef} src="https://www.soundjay.com/buttons/sounds/button-20.mp3" preload="auto" />
 
       <div className="flex justify-between items-center mb-6 md:mb-10">
         <h2 className="text-2xl md:text-4xl font-black italic uppercase tracking-tighter text-gray-900 underline decoration-orange-500 decoration-8 underline-offset-8">Front of House</h2>
