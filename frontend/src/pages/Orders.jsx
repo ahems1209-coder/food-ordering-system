@@ -40,7 +40,8 @@ function Orders() {
   // Chime when new "Ready" orders appear for staff
   useEffect(() => {
     if (orders.length > prevCount && prevCount !== 0) {
-      const chime = new Audio("https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/Chime.wav");
+      const chime = new Audio("https://raw.githubusercontent.com/sh4hids/Sound-Effects/master/iPhone-Notification.mp3");
+      chime.volume = 0.4;
       chime.play().catch(() => {});
     }
     setPrevCount(orders.length);

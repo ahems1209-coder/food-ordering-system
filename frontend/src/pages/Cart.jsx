@@ -23,7 +23,7 @@ function Cart({ cart, setCart, addToCart, decrementQty, removeFromCart }) {
 
     try {
       // Play a quick sound to unlock the audio engine for status updates
-      const unlockAudio = new Audio("https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/Chime.wav");
+      const unlockAudio = new Audio("https://raw.githubusercontent.com/sh4hids/Sound-Effects/master/iPhone-Notification.mp3");
       unlockAudio.volume = 0.1;
       unlockAudio.play().catch(() => {});
 
