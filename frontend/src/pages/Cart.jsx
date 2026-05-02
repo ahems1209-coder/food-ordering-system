@@ -16,7 +16,6 @@ function Cart({ cart, setCart, addToCart, decrementQty, removeFromCart }) {
 
     const orderData = {
       tableNumber,
-      orderNumber: Math.floor(1000 + Math.random() * 9000), // Random 4-digit Order ID
       items: cart,
       totalAmount: total,
       restaurantId: localStorage.getItem("restaurantId"),
@@ -24,7 +23,7 @@ function Cart({ cart, setCart, addToCart, decrementQty, removeFromCart }) {
 
     try {
       // Play a quick sound to unlock the audio engine for status updates
-      const unlockAudio = new Audio("https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav");
+      const unlockAudio = new Audio("https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/Chime.wav");
       unlockAudio.volume = 0.1;
       unlockAudio.play().catch(() => {});
 

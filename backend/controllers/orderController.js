@@ -2,9 +2,23 @@ import Order from "../models/Order.js"; // 👈 Ensure this .js is there!
 
 export const placeOrder = async (req, res) => {
   try {
-    const { tableNumber, orderNumber, items, totalAmount, restaurantId } = req.body;
+    const { tableNumber, items, totalAmount, restaurantId } = req.body;
     if (!restaurantId) return res.status(400).json({ message: "Restaurant ID required" });
-    const newOrder = new Order({ tableNumber, orderNumber, items, totalAmount, restaurantId });
+
+    // Generate sequential order number
+    const lastOrder = await Order.findOne({ restaurantId }).sort({ createdAt: -1 });
+    let nextOrderNumber = "1001";
+    if (lastOrder && !isNaN(lastOrder.orderNumber)) {
+      nextOrderNumber = (parseInt(lastOrder.orderNumber) + 1).toString();
+    }
+
+    const newOrder = new Order({ 
+      tableNumber, 
+      orderNumber: nextOrderNumber, 
+      items, 
+      totalAmount, 
+      restaurantId 
+    });
     await newOrder.save();
     res.status(201).json(newOrder);
   } catch (error) {

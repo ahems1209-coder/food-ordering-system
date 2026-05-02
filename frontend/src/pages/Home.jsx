@@ -7,14 +7,10 @@ import FoodCard from "../components/FoodCard";
 
 // Skeleton component for a smooth loading experience
 const Skeleton = () => (
-  <div className="bg-white rounded-[2rem] p-4 shadow-sm animate-pulse">
-    <div className="bg-gray-200 h-48 w-full rounded-[1.5rem] mb-4"></div>
-    <div className="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
-    <div className="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
-    <div className="flex justify-between items-center pt-2">
-      <div className="h-8 bg-gray-200 rounded w-16"></div>
-      <div className="h-12 bg-gray-200 rounded-2xl w-28"></div>
-    </div>
+  <div className="bg-white rounded-[2rem] p-4 shadow-sm">
+    <div className="bg-gray-100 h-48 w-full rounded-[1.5rem] mb-4"></div>
+    <div className="h-6 bg-gray-100 rounded w-3/4 mb-2"></div>
+    <div className="h-4 bg-gray-100 rounded w-1/2"></div>
   </div>
 );
 
@@ -74,7 +70,7 @@ function Home({ addToCart, cart, decrementQty }) {
           
           {/* Decorative element for Hero */}
           <div className="hidden md:flex md:w-1/2 justify-end relative">
-            <div className="text-[180px] grayscale opacity-10 select-none animate-bounce">🍔</div>
+            <div className="text-[180px] grayscale opacity-10 select-none">🍔</div>
           </div>
         </div>
       </section>

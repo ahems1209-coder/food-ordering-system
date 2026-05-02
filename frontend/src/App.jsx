@@ -81,7 +81,7 @@ function App() {
       
       {/*  STAFF NAVIGATION (Only shown to logged-in staff) */}
       {user && (
-        <nav className="bg-black text-white px-4 md:px-8 py-4 md:py-5 flex justify-between items-center sticky top-0 z-50 shadow-md">
+        <nav className="bg-black text-white px-4 md:px-8 py-4 md:py-5 flex justify-between items-center fixed top-0 left-0 right-0 z-50 shadow-md">
           <Link to="/dashboard" className="flex items-center gap-2 text-xl md:text-2xl font-black italic uppercase">
             <img src="/logo.png" alt="Logo" className="h-8 w-8 rounded-lg" />
             <span>Food<span className="text-orange-500">Dash</span></span> <span className="text-[10px] bg-white/20 px-2 py-1 rounded ml-2 not-italic">STAFF</span>
@@ -99,7 +99,7 @@ function App() {
 
       {/* CUSTOMER NAVBAR (Minimalist, only shown to customers) */}
       {!user && (
-        <nav className="bg-white border-b border-gray-100 px-4 md:px-8 py-4 md:py-5 flex justify-between items-center sticky top-0 z-50">
+        <nav className="bg-white border-b border-gray-100 px-4 md:px-8 py-4 md:py-5 flex justify-between items-center fixed top-0 left-0 right-0 z-50">
           <Link to="/" className="flex items-center gap-2 text-xl md:text-2xl font-black italic uppercase text-gray-900">
             <img src="/logo.png" alt="Logo" className="h-8 w-8 rounded-lg" />
             <span>Food<span className="text-orange-500">Dash</span></span>
@@ -130,7 +130,7 @@ function App() {
       {/* LIVE TRACKER (Customer only) */}
       {!user && <OrderTracker />}
 
-      <main className="pb-20 md:pb-0">
+      <main className="pt-20 pb-24 md:pb-10">
         <Routes>
           <Route path="/" element={tableNumber || user ? <Home addToCart={addToCart} decrementQty={decrementQty} cart={cart} /> : <Navigate to="/welcome" />} />
           <Route path="/welcome" element={<Welcome />} />

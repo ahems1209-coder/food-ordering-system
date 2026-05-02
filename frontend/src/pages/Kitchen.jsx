@@ -1,6 +1,5 @@
 import API_URL from "../api";
 import { useState, useEffect } from "react";
-
 import axios from "axios";
 
 function Kitchen() {
@@ -13,7 +12,6 @@ function Kitchen() {
       const res = await axios.get(`${API_URL}/api/orders/all`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      // Kitchen only sees Pending and Preparing
       const activeOrders = res.data.filter(order => order.status === "Pending" || order.status === "Preparing");
       setOrders(activeOrders); 
     } catch (err) {
@@ -34,44 +32,27 @@ function Kitchen() {
 
   useEffect(() => {
     fetchOrders();
-    const interval = setInterval(fetchOrders, 5000); // Refresh every 5s
+    const interval = setInterval(fetchOrders, 5000); 
     return () => clearInterval(interval);
   }, []);
 
-  const [soundEnabled, setSoundEnabled] = useState(false);
-
-  // Sound notification for new orders
+  // Universal sound logic
   useEffect(() => {
-    if (orders.length > prevCount && prevCount !== 0 && soundEnabled) {
-      const audio = new Audio("https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav");
-      audio.play().catch(e => {
-        console.log("Audio play blocked");
-        setSoundEnabled(false);
-      });
+    if (orders.length > prevCount && prevCount !== 0) {
+      const chime = new Audio("https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/Chime.wav");
+      chime.play().catch(() => {});
     }
     setPrevCount(orders.length);
-  }, [orders, prevCount, soundEnabled]);
-
-  const enableSound = () => {
-    const audio = new Audio("https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav");
-    audio.play();
-    setSoundEnabled(true);
-  };
+  }, [orders, prevCount]);
 
   return (
     <div className="p-4 md:p-10 bg-gray-900 min-h-screen text-white pb-24 md:pb-10">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-10 gap-4">
-        <h1 className="text-3xl md:text-4xl font-black italic uppercase">Kitchen <span className="text-orange-500">Live</span></h1>
-        
-        {!soundEnabled ? (
-          <button onClick={enableSound} className="bg-orange-500 text-white px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-white hover:text-orange-500 transition-all animate-bounce shadow-lg shadow-orange-500/20">
-            ⚠️ Enable Audio Notifications
-          </button>
-        ) : (
-          <button onClick={enableSound} className="bg-green-500/20 text-green-400 border border-green-500/30 px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest cursor-default">
-            ✅ Sound Active
-          </button>
-        )}
+        <h1 className="text-3xl md:text-4xl font-black italic uppercase tracking-tighter">Kitchen <span className="text-orange-500">Live</span></h1>
+        <div className="flex items-center gap-2 bg-green-500/10 px-4 py-2 rounded-xl border border-green-500/20">
+          <div className="h-2 w-2 bg-green-500 rounded-full animate-ping"></div>
+          <span className="text-[10px] font-black uppercase text-green-400">Monitoring Orders</span>
+        </div>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">

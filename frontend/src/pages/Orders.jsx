@@ -1,10 +1,10 @@
 import API_URL from "../api";
 import { useState, useEffect } from "react";
-
 import axios from "axios";
 
 function Orders() {
   const [orders, setOrders] = useState([]);
+  const [prevCount, setPrevCount] = useState(0);
   const token = localStorage.getItem("token");
 
   const fetchOrders = async () => {
@@ -33,14 +33,23 @@ function Orders() {
 
   useEffect(() => {
     fetchOrders();
-    const interval = setInterval(fetchOrders, 10000); // Auto-refresh every 10 seconds
+    const interval = setInterval(fetchOrders, 10000); 
     return () => clearInterval(interval);
   }, []);
+
+  // Chime when new "Ready" orders appear for staff
+  useEffect(() => {
+    if (orders.length > prevCount && prevCount !== 0) {
+      const chime = new Audio("https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/Chime.wav");
+      chime.play().catch(() => {});
+    }
+    setPrevCount(orders.length);
+  }, [orders, prevCount]);
 
   return (
     <div className="p-4 md:p-10 bg-gray-100 min-h-screen pb-24 md:pb-10">
       <div className="flex justify-between items-center mb-6 md:mb-10">
-        <h2 className="text-2xl md:text-4xl font-black italic uppercase tracking-tighter text-gray-900 underline decoration-orange-500 decoration-8 underline-offset-8">Front of House</h2>
+        <h2 className="text-2xl md:text-4xl font-black italic uppercase tracking-tighter text-gray-900 underline decoration-orange-500 decoration-8 underline-offset-8 underline-offset-8">Front of House</h2>
         <div className="bg-green-500 h-4 w-4 rounded-full animate-ping"></div>
       </div>
 
