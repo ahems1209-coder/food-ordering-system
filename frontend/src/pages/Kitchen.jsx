@@ -4,7 +4,6 @@ import axios from "axios";
 
 function Kitchen() {
   const [orders, setOrders] = useState([]);
-  const [isAudioUnlocked, setIsAudioUnlocked] = useState(false);
   const isInitialLoad = useRef(true);
   const token = localStorage.getItem("token");
   const audioRef = useRef(null);
@@ -20,11 +19,14 @@ function Kitchen() {
         // Find new orders that were not in the previous list
         const newOrders = activeOrders.filter(ao => ao.status === "Pending" && !prevOrders.some(po => po._id === ao._id));
         
-        // Play sound if:
-        // 1. There are new orders
-        // 2. It's NOT the first time the page is loading (to avoid beeping for old orders on refresh)
+        // Play sound if new orders arrived and it's not the first load
         if (newOrders.length > 0 && !isInitialLoad.current) {
-          playNotification();
+          if (audioRef.current) {
+            audioRef.current.currentTime = 0;
+            audioRef.current.play().catch(() => {
+              console.log("Autoplay blocked by browser. Interaction required.");
+            });
+          }
         }
         
         if (isInitialLoad.current) {
@@ -49,22 +51,6 @@ function Kitchen() {
     }
   };
 
-  const playNotification = () => {
-    if (audioRef.current) {
-      audioRef.current.currentTime = 0;
-      audioRef.current.play().catch(err => console.log("Audio play failed. Browser may be blocking sound until user interaction.", err));
-    }
-  };
-
-  const unlockAudio = () => {
-    if (audioRef.current) {
-      audioRef.current.play().then(() => {
-        audioRef.current.pause();
-        setIsAudioUnlocked(true);
-      }).catch(err => console.log("Unlock failed:", err));
-    }
-  };
-
   useEffect(() => {
     fetchOrders();
     const interval = setInterval(fetchOrders, 3000); 
@@ -72,23 +58,16 @@ function Kitchen() {
   }, []);
 
   return (
-    <div className="p-4 md:p-10 bg-gray-900 min-h-screen text-white pb-24 md:pb-10" onClick={!isAudioUnlocked ? unlockAudio : undefined}>
+    <div className="p-4 md:p-10 bg-gray-900 min-h-screen text-white pb-24 md:pb-10">
+      {/* Hidden Audio Element */}
       <audio ref={audioRef} src="https://raw.githubusercontent.com/sh4hids/Sound-Effects/master/iPhone-Notification.mp3" preload="auto" />
 
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-10 gap-4">
-        <div>
-          <h1 className="text-3xl md:text-4xl font-black italic uppercase tracking-tighter">Kitchen <span className="text-orange-500">Live</span></h1>
-          {!isAudioUnlocked && (
-            <p className="text-[10px] text-orange-400 font-bold animate-pulse mt-1 italic uppercase tracking-widest">⚠️ Please tap anywhere on the screen once to enable sound</p>
-          )}
-          {isAudioUnlocked && (
-            <p className="text-[10px] text-green-400 font-bold mt-1 italic uppercase tracking-widest">✅ Sound is active</p>
-          )}
-        </div>
+        <h1 className="text-3xl md:text-4xl font-black italic uppercase tracking-tighter">Kitchen <span className="text-orange-500">Live</span></h1>
         
         <div className="flex items-center gap-2 bg-green-500/10 px-4 py-2 rounded-xl border border-green-500/20">
           <div className="h-2 w-2 bg-green-500 rounded-full animate-ping"></div>
-          <span className="text-[10px] font-black uppercase text-green-400 tracking-widest">Monitoring Orders</span>
+          <span className="text-[10px] font-black uppercase text-green-400 tracking-widest">Auto-Monitoring Active</span>
         </div>
       </div>
       
@@ -100,7 +79,7 @@ function Kitchen() {
           </div>
         ) : (
           orders.map((order) => (
-            <div key={order._id} className="bg-white text-black p-6 rounded-[2.5rem] shadow-xl border-t-8 border-orange-500 transition-all hover:scale-[1.02]">
+            <div key={order._id} className="bg-white text-black p-6 rounded-[2.5rem] shadow-xl border-t-8 border-orange-500">
               <div className="flex justify-between items-center mb-4">
                 <span className="text-4xl font-black">T-{order.tableNumber}</span>
                 <div className="flex flex-col items-end">

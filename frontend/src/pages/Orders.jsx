@@ -4,7 +4,6 @@ import axios from "axios";
 
 function Orders() {
   const [orders, setOrders] = useState([]);
-  const [isAudioUnlocked, setIsAudioUnlocked] = useState(false);
   const isInitialLoad = useRef(true);
   const token = localStorage.getItem("token");
   const audioRef = useRef(null);
@@ -18,14 +17,17 @@ function Orders() {
       const activeOrders = res.data.filter(order => order.status !== "Paid" && order.status !== "Pending" && order.status !== "Preparing");
       
       setOrders(prevOrders => {
-        // Find new orders that are now "Ready" but weren't in the previous list
+        // Find new orders that are now "Ready"
         const newReadyOrders = activeOrders.filter(ao => ao.status === "Ready" && !prevOrders.some(po => po._id === ao._id));
         
-        // Play sound if:
-        // 1. There are new ready orders
-        // 2. It's NOT the first load of the page
+        // Play sound if new ready orders arrived and it's not the first load
         if (newReadyOrders.length > 0 && !isInitialLoad.current) {
-          playNotification();
+          if (audioRef.current) {
+            audioRef.current.currentTime = 0;
+            audioRef.current.play().catch(() => {
+              console.log("Autoplay blocked by browser. Interaction required.");
+            });
+          }
         }
 
         if (isInitialLoad.current) {
@@ -50,22 +52,6 @@ function Orders() {
     }
   };
 
-  const playNotification = () => {
-    if (audioRef.current) {
-      audioRef.current.currentTime = 0;
-      audioRef.current.play().catch(err => console.log("Audio play failed:", err));
-    }
-  };
-
-  const unlockAudio = () => {
-    if (audioRef.current) {
-      audioRef.current.play().then(() => {
-        audioRef.current.pause();
-        setIsAudioUnlocked(true);
-      }).catch(err => console.log("Unlock failed:", err));
-    }
-  };
-
   useEffect(() => {
     fetchOrders();
     const interval = setInterval(fetchOrders, 5000); 
@@ -73,19 +59,11 @@ function Orders() {
   }, []);
 
   return (
-    <div className="p-4 md:p-10 bg-gray-100 min-h-screen pb-24 md:pb-10" onClick={!isAudioUnlocked ? unlockAudio : undefined}>
+    <div className="p-4 md:p-10 bg-gray-100 min-h-screen pb-24 md:pb-10">
       <audio ref={audioRef} src="https://raw.githubusercontent.com/sh4hids/Sound-Effects/master/iPhone-Notification.mp3" preload="auto" />
 
       <div className="flex justify-between items-center mb-6 md:mb-10">
-        <div>
-          <h2 className="text-2xl md:text-4xl font-black italic uppercase tracking-tighter text-gray-900 underline decoration-orange-500 decoration-8 underline-offset-8">Front of House</h2>
-          {!isAudioUnlocked && (
-            <p className="text-[10px] text-orange-600 font-bold animate-pulse mt-1 italic uppercase tracking-widest">⚠️ Please tap anywhere on the screen to enable sound</p>
-          )}
-          {isAudioUnlocked && (
-            <p className="text-[10px] text-green-600 font-bold mt-1 italic uppercase tracking-widest">✅ Sound Active</p>
-          )}
-        </div>
+        <h2 className="text-2xl md:text-4xl font-black italic uppercase tracking-tighter text-gray-900 underline decoration-orange-500 decoration-8 underline-offset-8">Front of House</h2>
         <div className="bg-green-500 h-4 w-4 rounded-full animate-ping"></div>
       </div>
 
@@ -97,7 +75,7 @@ function Orders() {
           </div>
         ) : (
           orders.map(order => (
-            <div key={order._id} className="bg-white p-6 md:p-8 rounded-[2.5rem] shadow-lg border-t-8 border-black transition-all hover:scale-[1.02]">
+            <div key={order._id} className="bg-white p-6 md:p-8 rounded-[2.5rem] shadow-lg border-t-8 border-black">
               <div className="flex justify-between items-start mb-6">
                 <div>
                   <h3 className="text-3xl md:text-4xl font-black text-orange-500">TABLE {order.tableNumber}</h3>
